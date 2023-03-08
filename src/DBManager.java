@@ -17,7 +17,7 @@ public class DBManager {
 	private void testConnection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/assignment1", "root", "Rasengan6!");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/patients", "root", "groupa");// change to ur data base
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM patients");
 			while (resultSet.next()) {
