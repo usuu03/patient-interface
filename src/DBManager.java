@@ -16,7 +16,7 @@ public class DBManager {
 	
 	private void testConnection() {
 		try {
-			//Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/assignment1", "root", "Rasengan6!");
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM patients");
