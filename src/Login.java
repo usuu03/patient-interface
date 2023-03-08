@@ -63,11 +63,34 @@ public class Login extends JFrame {
     }
 
     //Checks if the username and password are in the Database
-    public void authenticate(){
+    // public void authenticate(){
 
-        String userLogin = username.getText();
-        String passwordLogin = password.getText();
-    }
+    //     String userLogin = username.getText();
+    //     String passwordLogin = password.getText();
+
+    //     try {
+    //         DBManager db = new DBManager();
+
+    //         db.connect();
+
+    //         String query = "SELECT * FROM patients WHERE username=' " + userLogin+ "'AND password='" + passwordLogin + "'";
+    //         ResultSet rs = db.executeQuery(query);
+
+    //         if(rs.next()){
+    //             new gp_specialist_gui();
+    //         } else{
+    //             JOptionPane.showMessageDialog(this, "Invalid username or password.");
+    //         }
+
+
+    //         rs.close();
+    //         db.disconnect();
+
+
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     public static void main(String[] args) {
         new Login();
