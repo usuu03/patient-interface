@@ -11,7 +11,7 @@ public class gp_specialist_gui extends JFrame {
     private JTextField ageField;
     private JTextField genderField;
     private JTextField emailField;
-    private JTextField contactField;
+    private JTextField phoneField;
     private JComboBox<String> expertiseComboBox;
     private JComboBox<String> specialistComboBox;
 
@@ -34,8 +34,8 @@ public class gp_specialist_gui extends JFrame {
         JLabel genderLabel = new JLabel("Gender:");
         genderField = new JTextField();
 
-        JLabel contactLabel = new JLabel("Contact Info:");
-        contactField = new JTextField();
+        JLabel phoneLabel = new JLabel("phone:");
+        phoneField = new JTextField();
 
         JLabel emailLabel = new JLabel("Email:");
         emailField = new JTextField();
@@ -56,8 +56,8 @@ public class gp_specialist_gui extends JFrame {
         patientPanel.add(genderLabel);
         patientPanel.add(genderField);
 
-        patientPanel.add(contactLabel);
-        patientPanel.add(contactField);
+        patientPanel.add(phoneLabel);
+        patientPanel.add(phoneField);
 
         patientPanel.add(emailLabel);
         patientPanel.add(emailField);
@@ -91,7 +91,7 @@ public class gp_specialist_gui extends JFrame {
 
     private void registerPatient() {
         String name = nameField.getText();
-        String contactInfo = contactField.getText();
+        String phone = phoneField.getText();
         String age = ageField.getText();
         String gender = genderField.getText();
         String email = emailField.getText();
@@ -101,12 +101,12 @@ public class gp_specialist_gui extends JFrame {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/assignment", "root", "Serlinky909!");
 
             // Create a statement to insert the patient data into the patients table
-            String query = "INSERT INTO patients (name, contact_info, age, gender, email) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO patients (name, age, gender, phone, email) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = (PreparedStatement) connection.prepareStatement(query);
             statement.setString(1, name);
-            statement.setString(2, contactInfo);
-            statement.setString(3, age);
-            statement.setString(4, gender);
+            statement.setString(2, age);
+            statement.setString(3, gender);
+            statement.setString(4, phone);
             statement.setString(5, email);
 
             // Execute the insert statement
@@ -118,7 +118,7 @@ public class gp_specialist_gui extends JFrame {
 
             JOptionPane.showMessageDialog(this, "Patient registered successfully.");
             nameField.setText("");
-            contactField.setText("");
+            phoneField.setText("");
             ageField.setText("");
             genderField.setText("");
             emailField.setText("");
