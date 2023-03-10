@@ -2,17 +2,18 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class Login extends JFrame {
 
-    private JPanel panel;
+   
     private JLabel title;
     private JLabel usernameLabel;
     private JTextField username;
     private JLabel passwordLabel;
     private JPasswordField password;
     private JButton loginBtn;
-    private JButton signupBtn;
+    
 
     public Login() {
 
@@ -46,6 +47,22 @@ public class Login extends JFrame {
         loginBtn = new JButton("Log in");
         loginBtn.setBounds(300, 300, 100, 40);
 
+        
+        loginBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String userLogin = username.getText();
+                String passwordLogin = password.getText();
+                
+                if(userLogin.equals("username") && passwordLogin.equals("password")){
+                    JOptionPane.showMessageDialog(Login.this, "Welcome to the GP");
+                } else{
+                    JOptionPane.showMessageDialog(Login.this, "Invalid username or password.");
+                }
+    
+            }
+        });
 
         this.add(title);
         this.add(usernameLabel);
@@ -62,38 +79,43 @@ public class Login extends JFrame {
 
     }
 
+
+   
+
     //Checks if the username and password are in the Database
-    // public void authenticate(){
+    /* public void authenticate(){
 
-    //     String userLogin = username.getText();
-    //     String passwordLogin = password.getText();
+        String userLogin = username.getText();
+        String passwordLogin = password.getText();
 
-    //     try {
-    //         DBManager db = new DBManager();
+        try {
+            DBManager db = new DBManager();
 
-    //         db.connect();
+            // db.connect();
+            // db.open();
 
-    //         String query = "SELECT * FROM patients WHERE username=' " + userLogin+ "'AND password='" + passwordLogin + "'";
-    //         ResultSet rs = db.executeQuery(query);
+            String query = "SELECT * FROM patients WHERE username=' " + userLogin+ "'AND password='" + passwordLogin + "'";
+            // ResultSet rs = db.executeQuery(query);
 
-    //         if(rs.next()){
-    //             new gp_specialist_gui();
-    //         } else{
-    //             JOptionPane.showMessageDialog(this, "Invalid username or password.");
-    //         }
-
-
-    //         rs.close();
-    //         db.disconnect();
+            if(rs.next()){
+                JOptionPane.showMessageDialog(this, "Welcome to the GP");
+            } else{
+                JOptionPane.showMessageDialog(this, "Invalid username or password.");
+            }
 
 
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+            rs.close();
+            db.disconnect();
 
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+ */
     public static void main(String[] args) {
         new Login();
     }
 
 }
+
