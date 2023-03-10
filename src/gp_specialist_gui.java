@@ -8,10 +8,10 @@ import java.sql.SQLException;
 
 public class gp_specialist_gui extends JFrame {
     private JTextField nameField;
-    private JTextField contactField;
     private JTextField ageField;
     private JTextField genderField;
     private JTextField emailField;
+    private JTextField contactField;
     private JComboBox<String> expertiseComboBox;
     private JComboBox<String> specialistComboBox;
 
