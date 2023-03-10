@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class gp_specialist_gui extends JFrame {
     private JTextField nameField;
@@ -89,10 +92,40 @@ public class gp_specialist_gui extends JFrame {
     private void registerPatient() {
         String name = nameField.getText();
         String contactInfo = contactField.getText();
-        // TODO: Save patient information to a database or file
-        JOptionPane.showMessageDialog(this, "Patient registered successfully.");
-        nameField.setText("");
-        contactField.setText("");
+        String age = ageField.getText();
+        String gender = genderField.getText();
+        String email = emailField.getText();
+
+        try {
+            // Open a connection to the database
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/assignment", "root", "Serlinky909!");
+
+            // Create a statement to insert the patient data into the patients table
+            String query = "INSERT INTO patients (name, contact_info, age, gender, email) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement statement = (PreparedStatement) connection.prepareStatement(query);
+            statement.setString(1, name);
+            statement.setString(2, contactInfo);
+            statement.setString(3, age);
+            statement.setString(4, gender);
+            statement.setString(5, email);
+
+            // Execute the insert statement
+            statement.executeUpdate();
+
+            // Close the statement and connection
+            statement.close();
+            connection.close();
+
+            JOptionPane.showMessageDialog(this, "Patient registered successfully.");
+            nameField.setText("");
+            contactField.setText("");
+            ageField.setText("");
+            genderField.setText("");
+            emailField.setText("");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error registering patient.");
+        }
     }
 
     private void selectSpecialist() {
