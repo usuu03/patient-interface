@@ -13,9 +13,11 @@ public class Login extends JFrame {
     private JLabel passwordLabel;
     private JPasswordField password;
     private JButton loginBtn;
+    private DBManager dbManager;
     
 
-    public Login() {
+    public Login(DBManager db) {
+        this.dbManager = db;
 
         this.setTitle("Login Page");
         this.setLocationRelativeTo(null);
@@ -55,7 +57,7 @@ public class Login extends JFrame {
                 String userLogin = username.getText();
                 String passwordLogin = password.getText();
                 
-                if(userLogin.equals("username") && passwordLogin.equals("password")){
+                if(dbManager.Login(userLogin, passwordLogin)){
                     JOptionPane.showMessageDialog(Login.this, "Welcome to the GP");
                 } else{
                     JOptionPane.showMessageDialog(Login.this, "Invalid username or password.");
@@ -114,7 +116,9 @@ public class Login extends JFrame {
     }
  */
     public static void main(String[] args) {
-        new Login();
+        DBManager db = new DBManager();		
+		db.testConnection();
+        new Login(db);
     }
 
 }
