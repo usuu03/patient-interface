@@ -3,6 +3,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.print.attribute.standard.RequestingUserName;
+
 public class DBManager {
 	private Connection connection;
 	private Statement statement;
@@ -44,5 +46,24 @@ public class DBManager {
 
 		return false;
 		
+	}
+
+	public void registerPatient(String name, String email, String phone, String gender, String age){
+		try {
+
+            // Create a statement to insert the patient data into the patients table
+            String query = "INSERT INTO patients (name, age, gender, phone, email) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement statement = (PreparedStatement) connection.prepareStatement(query);
+            statement.setString(1, name);
+            statement.setString(2, age);
+            statement.setString(3, gender);
+            statement.setString(4, phone);
+            statement.setString(5, email);
+
+            // Execute the insert statement
+            statement.executeUpdate();
+		} catch (Exception e) {
+			return;
+		}
 	}
 }

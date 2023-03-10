@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
 
 public class gp_specialist_gui extends JFrame {
     private JTextField nameField;
@@ -14,8 +12,10 @@ public class gp_specialist_gui extends JFrame {
     private JTextField phoneField;
     private JComboBox<String> expertiseComboBox;
     private JComboBox<String> specialistComboBox;
+    private DBManager dbManager;
 
-    public gp_specialist_gui() {
+    public gp_specialist_gui(DBManager db) {
+        this.dbManager = db;
         setTitle("GP Appointment Scheduler");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,24 +97,25 @@ public class gp_specialist_gui extends JFrame {
         String email = emailField.getText();
 
         try {
+            dbManager.registerPatient(name, email, phone, gender, age);
             // Open a connection to the database
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/assignment", "root", "Serlinky909!");
+            // Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/assignment", "root", "Serlinky909!");
 
-            // Create a statement to insert the patient data into the patients table
-            String query = "INSERT INTO patients (name, age, gender, phone, email) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement statement = (PreparedStatement) connection.prepareStatement(query);
-            statement.setString(1, name);
-            statement.setString(2, age);
-            statement.setString(3, gender);
-            statement.setString(4, phone);
-            statement.setString(5, email);
+            // // Create a statement to insert the patient data into the patients table
+            // String query = "INSERT INTO patients (name, age, gender, phone, email) VALUES (?, ?, ?, ?, ?)";
+            // PreparedStatement statement = (PreparedStatement) connection.prepareStatement(query);
+            // statement.setString(1, name);
+            // statement.setString(2, age);
+            // statement.setString(3, gender);
+            // statement.setString(4, phone);
+            // statement.setString(5, email);
 
-            // Execute the insert statement
-            statement.executeUpdate();
+            // // Execute the insert statement
+            // statement.executeUpdate();
 
             // Close the statement and connection
-            statement.close();
-            connection.close();
+            // statement.close();
+            // connection.close();
 
             JOptionPane.showMessageDialog(this, "Patient registered successfully.");
             nameField.setText("");
@@ -122,7 +123,7 @@ public class gp_specialist_gui extends JFrame {
             ageField.setText("");
             genderField.setText("");
             emailField.setText("");
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error registering patient.");
         }
@@ -136,6 +137,8 @@ public class gp_specialist_gui extends JFrame {
     }
 
     public static void main(String[] args) {
-        new gp_specialist_gui();
+        DBManager db = new DBManager();		
+		db.testConnection();
+        new gp_specialist_gui(db);
     }
 }
