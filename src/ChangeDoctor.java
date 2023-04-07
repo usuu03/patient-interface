@@ -1,51 +1,106 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
 
-public class DBManager {
-	private Connection connection;
-	private Statement statement;
-	private ResultSet resultSet;
+public class ChangeDoctor extends JFrame implements ActionListener {
 
-	public static void main(String[] args) {
-        
-		DBManager db = new DBManager();		
-		db.testConnection();
-		//System.out.println(db.Login("j.smith", "password2"));
-	}
-	
-	public void testConnection() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			//connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/database?user=root&password=$uperDragon13");// change to ur data base
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/database?user=root&password=$uperDragon13");
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery("SELECT * FROM patients");
-			while (resultSet.next()) {
-				System.out.println(resultSet.getString("id") + " - " + resultSet.getString("name") + " - " + resultSet.getString("age")
-				+ " - " + resultSet.getString("gender") + " - " + resultSet.getString("phone") + " - " + resultSet.getString("email"));
-			}
+    private JLabel label;
+    private JComboBox<String> doctorList;
+    private JButton changeButton;
+    private Connection connection;
+    private PreparedStatement statement;
+    private ResultSet resultSet;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
+    public ChangeDoctor() {
+        super("Change Doctor");
 
+        // Initialize components
+        label = new JLabel("Select a new doctor:");
+        doctorList = new JComboBox<String>();
+        changeButton = new JButton("Change Doctor");
 
+        // Getting the doctors name from the database and adding them to the combo box
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/database?user=root&password=$uperDragon13");
+            statement = connection.prepareStatement("SELECT name FROM doctors");
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                doctorList.addItem(resultSet.getString("name"));
+            }
 
-	public boolean Login(String username, String password) {
-		try {
-			resultSet = statement.executeQuery("SELECT username FROM users WHERE username = '" + username + "' AND password = '"+password+"'");
-			if (resultSet.next()) {
-				return true;
-			}
-		} catch (Exception e) {
-			return false;		
-		}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		return false;
-		
-	}
+        // Add components to the frame
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+        panel.add(label);
+        panel.add(doctorList);
+        panel.add(changeButton);
+        add(panel);
+
+        // Register action listener for button
+        changeButton.addActionListener(this);
+
+        // Set frame attributes
+        setSize(300, 120);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == changeButton) {
+            String selectedDoctor = (String) doctorList.getSelectedItem();
+
+            // Getting the ID of the selected doctor from the database
+            int ID = -1;
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager
+                        .getConnection("jdbc:mysql://localhost:3306/database?user=root&password=$uperDragon13");
+                statement = connection.prepareStatement("SELECT id FROM doctors WHERE name='" + selectedDoctor + "'");
+                resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    ID = resultSet.getInt(1);
+                }
+                connection.close();
+
+            } catch (Exception b) {
+                b.printStackTrace();
+            }
+
+            // Update the bookings table in the database
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager
+                        .getConnection("jdbc:mysql://localhost:3306/database?user=root&password=$uperDragon13");
+                String query = "UPDATE bookings SET doctor_id=" + ID + " WHERE status='Scheduled'";
+                PreparedStatement updateStatement = connection.prepareStatement("UPDATE bookings SET doctor_id=? WHERE status='Scheduled'");
+                updateStatement.setInt(1, ID);
+                int rowsAffected = updateStatement.executeUpdate();
+
+                connection.close();
+            } catch (Exception b) {
+                b.printStackTrace();
+            }
+
+            // Code to send confirmation messages to the patient and the doctor
+            String confirmationMessage = "Your doctor has been changed to " + selectedDoctor;
+            JOptionPane.showMessageDialog(this, confirmationMessage);
+
+        }
+    }
+
+    public static void main(String[] args) {
+        new ChangeDoctor();
+        DBManager db = new DBManager();
+        db.testConnection();
+
+    }
 }
